@@ -7,9 +7,16 @@ val sparkVersion = "2.3.0"
 val slf4jVersion = "1.7.16"
 val log4jVersion = "1.2.17"
 
-libraryDependencies ++= Seq(
+val sparkAndDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "org.apache.spark" %% "spark-hive" % sparkVersion,
+  "org.apache.spark" %% "spark-sql-kafka-0-10" % sparkVersion
+)
+
+libraryDependencies ++= sparkAndDependencies.map(_ % "provided")
+
+libraryDependencies ++= Seq(
 
   "org.postgresql" % "postgresql" % "42.1.1",
 
