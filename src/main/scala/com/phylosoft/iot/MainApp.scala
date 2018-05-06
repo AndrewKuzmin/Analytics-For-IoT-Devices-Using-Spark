@@ -37,7 +37,7 @@ object MainApp {
     log.setLevel(Level.WARN)
     //        Logger.getRootLogger.setLevel(Level.WARN)
 
-    val processor = new Processor("MainApp")
+    val processor = new Processor("MainApp", params)
 
     processor.start()
 

@@ -1,4 +1,4 @@
-package com.phylosoft.iot.sink
+package com.phylosoft.iot.sink.kafka
 
 import java.util.Properties
 

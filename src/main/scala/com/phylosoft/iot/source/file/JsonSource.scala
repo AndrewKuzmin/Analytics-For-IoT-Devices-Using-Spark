@@ -8,11 +8,12 @@ class JsonSource(spark: SparkSession) {
 
   def getJsonStreamingInputDF: DataFrame = {
 
-    val inputDF = spark.read
+    val inputDF = spark
+      .readStream
       .schema(JsonSchemas.NEST_SCHEMA)
       .option("multiLine", "true")
-      .json("data/nest.json")
-      .cache()
+      .json("data/nest/")
+//      .cache()
     //    debug(inputDF)
 
     import spark.implicits._
@@ -59,8 +60,8 @@ class JsonSource(spark: SparkSession) {
 
   private def debug(df: DataFrame): Unit = {
     df.printSchema()
-    df.show(1)
-    println("Count = " + df.count())
+//    df.show(1)
+//    println("Count = " + df.count())
   }
 
 }

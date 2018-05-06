@@ -1,33 +1,47 @@
 package com.phylosoft.iot
 
+import java.io.File
+
+import com.phylosoft.iot.sink.console.ConsoleSink
 import com.phylosoft.iot.source.file.JsonSource
 import com.typesafe.config.ConfigFactory
+import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-class Processor(appName: String) {
+class Processor(appName: String, params: Params) {
 
   private val appConf = ConfigFactory.load
 
+  // warehouseLocation points to the default location for managed databases and tables
+  private val warehouseLocation = "file:///" + new File("spark-warehouse").getAbsolutePath.toString
+
+  private val conf = new SparkConf()
+    .setAppName(s"$appName with $params")
+    .set("spark.sql.warehouse.dir", warehouseLocation)
+    .set("spark.sql.shuffle.partitions", "4") // keep the size of shuffles small
+    //      .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    //      .set("spark.kryoserializer.buffer", "24")
+    .set("spark.sql.session.timeZone", "UTC")
+    .set("spark.sql.cbo.enabled", "true")
+
   private[iot] val spark = SparkSession
-    .builder()
-    .appName(appName)
-    //      sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    //      sparkConf.set("spark.kryoserializer.buffer", "24")
-    .config("spark.sql.shuffle.partitions", "1")
-    .config("spark.sql.cbo.enabled", "true")
+    .builder
+    .config(conf)
+    //      .enableHiveSupport()
     .getOrCreate()
 
   def start(): Unit = {
 
-    val source = new JsonSource(spark)
+    val inputSource = new JsonSource(spark)
 
-    val joineDFs = source.getJsonStreamingInputDF
+    val joineDFs = inputSource.getJsonStreamingInputDF
 
     val outputDF = checkAndFormatFromFile(joineDFs)
 
-    outputDF.write
-      .format("console")
-      .save()
+    val outputSink = new ConsoleSink
+    val query = outputSink.start(outputDF)
+
+    query.awaitTermination()
 
   }
 

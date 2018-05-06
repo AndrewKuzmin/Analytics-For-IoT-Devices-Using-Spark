@@ -1,4 +1,4 @@
-package com.phylosoft.iot.sink
+package com.phylosoft.iot.sink.foreach
 
 import java.sql.{Connection, DriverManager, PreparedStatement, Timestamp}
 import java.util.{Calendar, TimeZone}
