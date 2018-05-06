@@ -6,7 +6,7 @@ import com.phylosoft.iot.domain.Model.DeviceData
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import org.apache.spark.sql.ForeachWriter
 
-class KafkaSink(kafkaProps: Properties) extends ForeachWriter[DeviceData] {
+class ForeachKafkaSink(kafkaProps: Properties) extends ForeachWriter[DeviceData] {
 
   // KafkaProducer can't be serialized, so we're creating it locally for each partition.
   var producer: KafkaProducer[String, DeviceData] = _

@@ -5,7 +5,7 @@ import java.util.{Calendar, TimeZone}
 
 import org.apache.spark.sql.{ForeachWriter, Row}
 
-class JDBCSink(url: String, user: String, pwd: String, table: String) extends ForeachWriter[Row] {
+class ForeachJDBCSink(url: String, user: String, pwd: String, table: String) extends ForeachWriter[Row] {
 
   val driver = "org.postgresql.Driver"
 
