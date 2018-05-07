@@ -6,6 +6,7 @@ scalaVersion := "2.11.12"
 val sparkVersion = "2.3.0"
 val slf4jVersion = "1.7.16"
 val log4jVersion = "1.2.17"
+val sparkCassandraConnectorVersion = "2.0.7"
 
 val sparkAndDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
@@ -17,6 +18,8 @@ val sparkAndDependencies = Seq(
 libraryDependencies ++= sparkAndDependencies.map(_ % "provided")
 
 libraryDependencies ++= Seq(
+
+  "com.datastax.spark" %% "spark-cassandra-connector" % sparkCassandraConnectorVersion,
 
   "org.postgresql" % "postgresql" % "42.1.1",
 

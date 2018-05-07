@@ -2,11 +2,11 @@ package com.phylosoft.iot.sink.console
 
 import java.io.File
 
-import com.phylosoft.iot.sink.Sink
+import com.phylosoft.iot.sink.StreamingSink
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.streaming.{OutputMode, StreamingQuery, Trigger}
 
-class ConsoleSink extends Sink {
+class ConsoleSink extends StreamingSink {
 
   def start(outputDF: DataFrame): StreamingQuery = {
 

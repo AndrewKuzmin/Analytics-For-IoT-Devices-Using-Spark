@@ -4,14 +4,14 @@ import java.io.File
 import java.util.Properties
 
 import com.phylosoft.iot.Params
-import com.phylosoft.iot.sink.Sink
+import com.phylosoft.iot.sink.StreamingSink
 import com.phylosoft.iot.utils.Provider
 import org.apache.spark.sql.streaming.StreamingQuery
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class KafkaSink(private val spark: SparkSession,
                 private val params: Params,
-                private val kafkaProps: Properties) extends Sink {
+                private val kafkaProps: Properties) extends StreamingSink {
 
   override def start(outputDF: DataFrame): StreamingQuery = {
 
