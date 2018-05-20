@@ -15,13 +15,10 @@ val sparkAndDependencies = Seq(
   "org.apache.spark" %% "spark-sql-kafka-0-10" % sparkVersion
 )
 
-libraryDependencies ++= sparkAndDependencies.map(_ % "provided")
+libraryDependencies ++= sparkAndDependencies
+//  .map(_ % "provided")
 
 libraryDependencies ++= Seq(
-
-  "com.datastax.spark" %% "spark-cassandra-connector" % sparkCassandraConnectorVersion,
-
-  "org.postgresql" % "postgresql" % "42.1.1",
 
   "org.scalatest" %% "scalatest" % "3.0.5",
 
