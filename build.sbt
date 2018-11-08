@@ -2,11 +2,11 @@ name := "Analytics-For-IoT-Devices-Using-Spark"
 
 version := "0.1.0-SNAPSHOT"
 
-scalaVersion := "2.11.12"
-val sparkVersion = "2.3.1"
+scalaVersion := "2.12.7"
+val sparkVersion = "2.4.0"
 val slf4jVersion = "1.7.16"
 val log4jVersion = "1.2.17"
-val sparkCassandraConnectorVersion = "2.0.7"
+val sparkCassandraConnectorVersion = "2.3.2"
 
 val sparkAndDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
