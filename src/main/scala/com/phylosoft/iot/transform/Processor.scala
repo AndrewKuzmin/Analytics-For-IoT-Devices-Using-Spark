@@ -1,36 +1,23 @@
 package com.phylosoft.iot.transform
 
-import java.io.File
-
-import com.phylosoft.iot.Params
+import com.phylosoft.iot.monitoring.Monitoring
 import com.phylosoft.iot.sink.console.ConsoleSink
 import com.phylosoft.iot.source.file.JsonSource
+import com.phylosoft.iot.{Logger, Params, SparkSessionConfiguration}
 import com.typesafe.config.ConfigFactory
-import org.apache.spark.SparkConf
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-import org.apache.spark.sql.{DataFrame, SparkSession}
 
-class Processor(appName: String, params: Params) {
+class Processor(appName: String, params: Params)
+  extends SparkSessionConfiguration
+    with Monitoring
+    with Logger {
 
   private val appConf = ConfigFactory.load
 
-  // warehouseLocation points to the default location for managed databases and tables
-  private val warehouseLocation = "file:///" + new File("spark-warehouse").getAbsolutePath.toString
-
-  private val conf = new SparkConf()
-    .setAppName(s"$appName with $params")
-    .set("spark.sql.warehouse.dir", warehouseLocation)
-    .set("spark.sql.shuffle.partitions", "4") // keep the size of shuffles small
-    //      .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    //      .set("spark.kryoserializer.buffer", "24")
-    .set("spark.sql.session.timeZone", "UTC")
-    .set("spark.sql.cbo.enabled", "true")
-
-  private[iot] val spark = SparkSession
-    .builder
-    .config(conf)
-    //      .enableHiveSupport()
-    .getOrCreate()
+  val settings = Map("spark.app.name" -> s"$appName with $params",
+    "spark.sql.shuffle.partitions" -> "4"
+  )
 
   def start(): Unit = {
 
