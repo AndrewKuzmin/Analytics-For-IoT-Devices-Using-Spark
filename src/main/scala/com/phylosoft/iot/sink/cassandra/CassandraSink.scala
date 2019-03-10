@@ -20,7 +20,7 @@ class CassandraSink()
     "keyspace" -> appConf.getString("cassandra.keyspace"))
 
 
-  def start(data: DataFrame,
+  def writeStream(data: DataFrame,
             trigger: Trigger = Trigger.Once(),
             outputMode: OutputMode = OutputMode.Update()): StreamingQuery = {
     data.writeStream

@@ -9,7 +9,7 @@ import org.apache.spark.sql.streaming.{OutputMode, StreamingQuery, Trigger}
 class ConsoleSink()
   extends StreamingSink {
 
-  override def start(data: DataFrame,
+  override def writeStream(data: DataFrame,
                      trigger: Trigger,
                      outputMode: OutputMode): StreamingQuery = {
 

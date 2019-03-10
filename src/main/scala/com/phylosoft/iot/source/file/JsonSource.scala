@@ -1,12 +1,14 @@
 package com.phylosoft.iot.source.file
 
 import com.phylosoft.iot.data.JsonSchemas
+import com.phylosoft.iot.source.StreamingSource
 import org.apache.spark.sql.functions.explode
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-class JsonSource(spark: SparkSession) {
+class JsonSource(spark: SparkSession)
+  extends StreamingSource {
 
-  def getJsonStreamingInputDF: DataFrame = {
+  def readStream: DataFrame = {
 
     val inputDF = spark
       .readStream

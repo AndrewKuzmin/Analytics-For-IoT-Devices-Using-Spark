@@ -7,6 +7,6 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
   */
 trait StreamingSource {
 
-  def load(spark: SparkSession): DataFrame
+  def readStream: DataFrame
 
 }

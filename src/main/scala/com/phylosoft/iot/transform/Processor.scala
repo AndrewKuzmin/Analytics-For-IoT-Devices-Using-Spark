@@ -23,13 +23,13 @@ class Processor(appName: String, params: Params)
 
     val inputSource = new JsonSource(spark)
 
-    val joineDFs = inputSource.getJsonStreamingInputDF
+    val joineDFs = inputSource.readStream
 
     val outputDF = checkAndFormatFromFile(joineDFs)
 
     val outputSink = new ConsoleSink
 
-    val query = outputSink.start(outputDF, Trigger.Once(), OutputMode.Append())
+    val query = outputSink.writeStream(outputDF, Trigger.Once(), OutputMode.Append())
 
     query.awaitTermination()
 

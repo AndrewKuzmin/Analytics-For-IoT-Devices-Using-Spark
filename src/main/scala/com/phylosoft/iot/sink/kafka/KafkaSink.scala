@@ -17,7 +17,7 @@ class KafkaSink(private val spark: SparkSession,
                 private val kafkaProps: Properties)
   extends StreamingSink {
 
-  def start(data: DataFrame,
+  def writeStream(data: DataFrame,
             trigger: Trigger = Trigger.Once(),
             outputMode: OutputMode = OutputMode.Update()): StreamingQuery = {
 

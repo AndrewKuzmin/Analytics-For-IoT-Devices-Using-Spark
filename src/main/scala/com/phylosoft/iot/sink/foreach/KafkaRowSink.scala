@@ -12,7 +12,7 @@ class KafkaRowSink(topic: String,
                    func: Row => (String, String))
   extends StreamingSink {
 
-  override def start(data: DataFrame,
+  override def writeStream(data: DataFrame,
                      trigger: Trigger,
                      outputMode: OutputMode): StreamingQuery = {
     val writer = new ForeachKafkaWriter(topic, brokers, func)
