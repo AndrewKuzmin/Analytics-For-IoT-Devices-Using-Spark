@@ -1,7 +1,8 @@
-package com.phylosoft.iot
+package com.phylosoft.iot.transform
 
 import java.io.File
 
+import com.phylosoft.iot.Params
 import com.phylosoft.iot.sink.console.ConsoleSink
 import com.phylosoft.iot.source.file.JsonSource
 import com.typesafe.config.ConfigFactory

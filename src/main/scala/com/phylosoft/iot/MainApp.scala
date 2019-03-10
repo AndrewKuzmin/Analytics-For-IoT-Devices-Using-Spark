@@ -1,6 +1,7 @@
 package com.phylosoft.iot
 
 import com.phylosoft.iot.AppConfig.Mode
+import com.phylosoft.iot.transform.Processor
 import org.apache.log4j.{Level, LogManager}
 import scopt.OptionParser
 
