@@ -6,19 +6,21 @@ import com.phylosoft.iot.sink.StreamingSink
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.streaming.{OutputMode, StreamingQuery, Trigger}
 
-class ConsoleSink extends StreamingSink {
+class ConsoleSink()
+  extends StreamingSink {
 
-  def start(outputDF: DataFrame): StreamingQuery = {
+  override def start(data: DataFrame,
+                     trigger: Trigger,
+                     outputMode: OutputMode): StreamingQuery = {
 
     // Provider.getConfig.getString("spark.checkpoint_location_spark_first")
     val checkpointLocation = "file:///" + new File("checkpoint").getAbsolutePath + "/spark_first"
 
-    outputDF
-      .writeStream
+    data.writeStream
       .format("console")
+      .trigger(trigger)
+      .outputMode(outputMode)
       .option("checkpointLocation", checkpointLocation)
-      .outputMode(OutputMode.Append())
-      .trigger(Trigger.Once())
       .start()
   }
 

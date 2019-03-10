@@ -6,6 +6,7 @@ import com.phylosoft.iot.sink.console.ConsoleSink
 import com.phylosoft.iot.source.file.JsonSource
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.SparkConf
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class Processor(appName: String, params: Params) {
@@ -39,7 +40,8 @@ class Processor(appName: String, params: Params) {
     val outputDF = checkAndFormatFromFile(joineDFs)
 
     val outputSink = new ConsoleSink
-    val query = outputSink.start(outputDF)
+
+    val query = outputSink.start(outputDF, Trigger.Once(), OutputMode.Append())
 
     query.awaitTermination()
 
