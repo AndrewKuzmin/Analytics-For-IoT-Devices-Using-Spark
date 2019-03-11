@@ -1,0 +1,15 @@
+{
+    "workflows": [{
+            "workflowName": "nest",
+            "workflowFilename": "nestWorkflow.json"
+        }],
+    "producers": [{
+        "type": "kafka",
+        "broker.server": "localhost",
+        "broker.port": 9092,
+        "topic": "nest-json-raw-data",
+        "flatten": false,
+        "sync": false
+
+    }]
+}
