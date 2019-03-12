@@ -1,8 +1,11 @@
 package com.phylosoft.iot.transform
 
+import java.util.Properties
+
 import com.phylosoft.iot.monitoring.Monitoring
 import com.phylosoft.iot.sink.console.ConsoleSink
 import com.phylosoft.iot.source.file.JsonSource
+import com.phylosoft.iot.source.kafka.json.KafkaRawDataJsonSource
 import com.phylosoft.iot.{Logger, Params, SparkSessionConfiguration}
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.DataFrame
@@ -21,11 +24,15 @@ class Processor(appName: String, params: Params)
 
   def start(): Unit = {
 
-    val inputSource = new JsonSource(spark)
+//    val inputSource = new JsonSource(spark)
 
-    val joineDFs = inputSource.readStream
+    val properties = new Properties()
+    properties.setProperty("subscribe", appConf.getString("kafka.topics.nest-json-raw-data"))
+    val inputSource = new KafkaRawDataJsonSource(spark, properties)
 
-    val outputDF = checkAndFormatFromFile(joineDFs)
+    val inputDF = inputSource.readStream
+
+    val outputDF = checkAndFormatFromFile(inputDF)
 
     val outputSink = new ConsoleSink
 

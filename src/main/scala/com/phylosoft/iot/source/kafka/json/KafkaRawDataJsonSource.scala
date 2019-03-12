@@ -3,16 +3,16 @@ package com.phylosoft.iot.source.kafka.json
 import java.util.Properties
 
 import com.phylosoft.iot.data.JsonSchemas
+import com.phylosoft.iot.source.NestPreparation
 import com.phylosoft.iot.source.kafka.KafkaSource
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.types.TimestampType
 
 /**
   * Created by Andrew Kuzmin on 3/10/2019.
   */
-class KafkaRawDataJsonSource(val spark: SparkSession,
-                             val properties: Properties)
-  extends KafkaSource {
+class KafkaRawDataJsonSource(val spark: SparkSession, val properties: Properties)
+  extends KafkaSource
+    with NestPreparation {
 
   override def getFullPlainInputDraftDF(rawInputDF: DataFrame): DataFrame = {
 
@@ -27,21 +27,11 @@ class KafkaRawDataJsonSource(val spark: SparkSession,
       .drop("key")
 
     val explodedInputdDF = parsedDF
-      .select(lower($"parsed_value.shop").as("shop"),
-        $"timestamp",
-        explode($"parsed_value.devices"))
-      .withColumnRenamed("key", "device")
+      .select($"parsed_value.devices")
 
     explodedInputdDF.printSchema()
 
-    val plainInputDraftDF = explodedInputdDF
-      .select($"*")
-      .withColumn("timestamp", $"value".cast(TimestampType))
-      .drop("value")
-
-    plainInputDraftDF.printSchema()
-
-    plainInputDraftDF
+    process(explodedInputdDF)
 
   }
 
