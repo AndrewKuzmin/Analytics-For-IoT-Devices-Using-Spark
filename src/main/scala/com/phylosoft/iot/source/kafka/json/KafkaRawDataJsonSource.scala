@@ -3,8 +3,8 @@ package com.phylosoft.iot.source.kafka.json
 import java.util.Properties
 
 import com.phylosoft.iot.data.JsonSchemas
-import com.phylosoft.iot.source.NestPreparation
 import com.phylosoft.iot.source.kafka.KafkaSource
+import com.phylosoft.iot.transform.NestTransformer
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 /**
@@ -12,7 +12,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
   */
 class KafkaRawDataJsonSource(val spark: SparkSession, val properties: Properties)
   extends KafkaSource
-    with NestPreparation {
+    with NestTransformer {
 
   override def getFullPlainInputDraftDF(rawInputDF: DataFrame): DataFrame = {
 

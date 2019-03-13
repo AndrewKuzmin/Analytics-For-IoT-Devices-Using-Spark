@@ -1,13 +1,12 @@
-package com.phylosoft.iot.source
+package com.phylosoft.iot.transform
 
-import com.phylosoft.iot.SparkSessionConfiguration
-import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions.explode
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 /**
   * Created by Andrew Kuzmin on 3/12/2019.
   */
-trait NestPreparation {
+trait NestTransformer {
 
   val spark: SparkSession
 

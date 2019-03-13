@@ -1,10 +1,9 @@
-package com.phylosoft.iot.transform
+package com.phylosoft.iot.processor
 
 import java.util.Properties
 
 import com.phylosoft.iot.monitoring.Monitoring
 import com.phylosoft.iot.sink.console.ConsoleSink
-import com.phylosoft.iot.source.file.JsonSource
 import com.phylosoft.iot.source.kafka.json.KafkaRawDataJsonSource
 import com.phylosoft.iot.{Logger, Params, SparkSessionConfiguration}
 import com.typesafe.config.ConfigFactory
