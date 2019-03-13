@@ -50,7 +50,10 @@ trait NestTransformer {
       $"value".getItem("battery_health").alias("battery_health"))
 
     val joineDFs = thermostateDF.join(cameraDF, "version")
+        .drop("location", "version", "device_id")
+
     debug(joineDFs)
+
     joineDFs
   }
 

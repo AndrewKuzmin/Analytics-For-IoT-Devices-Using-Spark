@@ -3,6 +3,7 @@ package com.phylosoft.iot.processor
 import java.util.Properties
 
 import com.phylosoft.iot.monitoring.Monitoring
+import com.phylosoft.iot.sink.cassandra.CassandraSink
 import com.phylosoft.iot.sink.console.ConsoleSink
 import com.phylosoft.iot.source.kafka.json.KafkaRawDataJsonSource
 import com.phylosoft.iot.{Logger, Params, SparkSessionConfiguration}
@@ -23,7 +24,8 @@ class Processor(appName: String, params: Params)
 
   def start(): Unit = {
 
-//    val inputSource = new JsonSource(spark)
+    // 1.
+    // val inputSource = new JsonSource(spark)
 
     val properties = new Properties()
     properties.setProperty("subscribe", appConf.getString("kafka.topics.nest-json-raw-data"))
@@ -33,9 +35,14 @@ class Processor(appName: String, params: Params)
 
     val outputDF = checkAndFormatFromFile(inputDF)
 
-    val outputSink = new ConsoleSink
+    // 1.
+    // val outputSink = new ConsoleSink
+    // val query = outputSink.writeStream(outputDF, Trigger.Once(), OutputMode.Append())
 
-    val query = outputSink.writeStream(outputDF, Trigger.Once(), OutputMode.Append())
+    debug(outputDF)
+
+    val outputSink = new CassandraSink
+    val query = outputSink.writeStream(data = outputDF)
 
     query.awaitTermination()
 
@@ -47,8 +54,8 @@ class Processor(appName: String, params: Params)
 
   def debug(df : DataFrame): Unit = {
     df.printSchema()
-    df.show(1)
-    println("Count = " + df.count())
+//    df.show(1)
+//    println("Count = " + df.count())
   }
 
 }
