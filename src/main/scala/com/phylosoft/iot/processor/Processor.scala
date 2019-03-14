@@ -3,6 +3,7 @@ package com.phylosoft.iot.processor
 import com.phylosoft.iot.monitoring.Monitoring
 import com.phylosoft.iot.sink.StreamingSink
 import com.phylosoft.iot.source.StreamingSource
+import com.phylosoft.iot.transform.NestTransformer
 import com.phylosoft.iot.{Logger, Params, SparkSessionConfiguration}
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.DataFrame
@@ -10,6 +11,7 @@ import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 
 abstract class Processor(appName: String, params: Params)
   extends SparkSessionConfiguration
+    with NestTransformer
     with Monitoring
     with Logger {
 
@@ -25,9 +27,7 @@ abstract class Processor(appName: String, params: Params)
 
     val inputDF = inputSource.readStream
 
-    val outputDF = checkAndFormatFromFile(inputDF)
-
-    debug(outputDF)
+    val outputDF = transform(inputDF)
 
     val outputSink = sink
 
@@ -45,8 +45,11 @@ abstract class Processor(appName: String, params: Params)
 
   def getOutputMode: OutputMode = OutputMode.Append()
 
-  def checkAndFormatFromFile(inputDF: DataFrame): DataFrame = {
-    inputDF
+  def transform(inputDF: DataFrame): DataFrame = {
+    debug(inputDF)
+    val result = process(inputDF)
+    debug(result)
+    result
   }
 
   def debug(df : DataFrame): Unit = {

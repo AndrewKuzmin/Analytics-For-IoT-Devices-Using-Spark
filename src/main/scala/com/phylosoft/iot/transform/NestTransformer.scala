@@ -52,7 +52,7 @@ trait NestTransformer {
     val joineDFs = thermostateDF.join(cameraDF, "version")
         .drop("location", "version", "device_id")
 
-    debug(joineDFs)
+//    debug(joineDFs)
 
     joineDFs
   }
