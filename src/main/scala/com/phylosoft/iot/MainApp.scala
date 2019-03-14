@@ -1,7 +1,17 @@
 package com.phylosoft.iot
 
+import java.util.Properties
+
 import com.phylosoft.iot.AppConfig.Mode
 import com.phylosoft.iot.processor.Processor
+import com.phylosoft.iot.sink.StreamingSink
+import com.phylosoft.iot.sink.cassandra.CassandraSink
+import com.phylosoft.iot.sink.console.ConsoleSink
+import com.phylosoft.iot.source.StreamingSource
+import com.phylosoft.iot.source.file.JsonSource
+import com.phylosoft.iot.source.kafka.json.KafkaRawDataJsonSource
+import com.phylosoft.iot.utils.Provider
+import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
 import scopt.OptionParser
 
@@ -34,11 +44,38 @@ object MainApp {
 
   def run(params: Params): Unit = {
 
+    val appConf = Provider.getConfig
+
     val log = LogManager.getRootLogger
     log.setLevel(Level.WARN)
     //        Logger.getRootLogger.setLevel(Level.WARN)
 
-    val processor = new Processor("MainApp", params)
+    val processor = new Processor("MainApp", params) {
+
+      override def source: StreamingSource = {
+        new JsonSource(spark)
+      }
+
+      override def sink: StreamingSink = {
+        new ConsoleSink
+      }
+
+    }
+
+//    val processor = new Processor("MainApp", params) {
+//
+//      override def source: StreamingSource = {
+//        val properties = new Properties()
+//        properties.setProperty("subscribe", appConf.getString("kafka.topics.nest-json-raw-data"))
+//        new KafkaRawDataJsonSource(spark, properties)
+//      }
+//
+//      override def sink: StreamingSink = {
+//        new CassandraSink
+//      }
+//
+//    }
+
 
     processor.start()
 

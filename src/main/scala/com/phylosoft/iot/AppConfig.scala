@@ -2,6 +2,11 @@ package com.phylosoft.iot
 
 object AppConfig {
 
+  object TRIGGER_POLICY extends Enumeration {
+    type TRIGGER_POLICY = Value
+    val DEFAULT, PROCESSING_TIME, ONCE, CONTINUOUS = Value
+  }
+
   object Mode extends Enumeration {
     type Mode = Value
     val REALTIME, BATCH = Value

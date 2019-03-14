@@ -1,17 +1,14 @@
 package com.phylosoft.iot.processor
 
-import java.util.Properties
-
 import com.phylosoft.iot.monitoring.Monitoring
-import com.phylosoft.iot.sink.cassandra.CassandraSink
-import com.phylosoft.iot.sink.console.ConsoleSink
-import com.phylosoft.iot.source.kafka.json.KafkaRawDataJsonSource
+import com.phylosoft.iot.sink.StreamingSink
+import com.phylosoft.iot.source.StreamingSource
 import com.phylosoft.iot.{Logger, Params, SparkSessionConfiguration}
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 
-class Processor(appName: String, params: Params)
+abstract class Processor(appName: String, params: Params)
   extends SparkSessionConfiguration
     with Monitoring
     with Logger {
@@ -24,29 +21,29 @@ class Processor(appName: String, params: Params)
 
   def start(): Unit = {
 
-    // 1.
-    // val inputSource = new JsonSource(spark)
-
-    val properties = new Properties()
-    properties.setProperty("subscribe", appConf.getString("kafka.topics.nest-json-raw-data"))
-    val inputSource = new KafkaRawDataJsonSource(spark, properties)
+    val inputSource = source
 
     val inputDF = inputSource.readStream
 
     val outputDF = checkAndFormatFromFile(inputDF)
 
-    // 1.
-    // val outputSink = new ConsoleSink
-    // val query = outputSink.writeStream(outputDF, Trigger.Once(), OutputMode.Append())
-
     debug(outputDF)
 
-    val outputSink = new CassandraSink
-    val query = outputSink.writeStream(data = outputDF)
+    val outputSink = sink
+
+    val query = outputSink.writeStream(data = outputDF, getTriggerPolicy, getOutputMode)
 
     query.awaitTermination()
 
   }
+
+  def source: StreamingSource = ???
+
+  def sink: StreamingSink = ???
+
+  def getTriggerPolicy: Trigger = Trigger.Once()
+
+  def getOutputMode: OutputMode = OutputMode.Append()
 
   def checkAndFormatFromFile(inputDF: DataFrame): DataFrame = {
     inputDF
